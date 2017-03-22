@@ -1,0 +1,376 @@
+################################################################################
+  The "Base tutorial" working-set brings together the different OSGi bundle
+  projects related to the eponymous OSGi-enRoute tutorial
+################################################################################
+  Description :
+  
+  In this tutorial we develop a little project that creates a simple server
+  application that interacts with an OSGi console shell.
+  
+  - In the 'debug' phase of this tutorial (see section "Debugging") we will
+    add the Apache-Felix Web-Console running in the OSGi framework.
+    Especially XRay, a plugin from this web-console, is very useful because
+    it let visualizes the OSGi services layer very well.
+    Since we use dependencies, this plugin will automatically drag in the
+    web console and the required Jetty web server.
+    Once running in the framework, we can open XRay web-console with the
+    web-browser, clicking :
+      URL : http://localhost:8080/system/console/xray
+    if we'are asked for credentials, type :
+      User id: 	admin
+      Password:	admin 
+  
+================================================================================
+  Report about the progress of this tutorial :
+  
+  ------------------------------------------------------------------------------
+  -- Section 1   --  Prerequisites
+  
+  NTR [Nothing To Report]
+
+  ------------------------------------------------------------------------------
+  -- Section 2   --  The Workspace
+  
+  NTR
+
+  ------------------------------------------------------------------------------
+  -- Section 3   --  API Project
+  
+  Related bundle project :
+    com.acme.prime.eval.api
+ 
+  NOTE :
+  
+  Let’s first define the contract for our API, this service contract is defined
+  as an interface.
+  
+  ****************************************************************************
+  *** Best practice is to give service contracts their own projects so     ***
+  *** they can easily be shared.                                           ***                                          
+  ****************************************************************************
+    
+  This is the purpose of the bundle com.acme.prime.eval.api
+  
+  An implementer of an API is a provider.
+  However, providers of a service API can both implement and/or be a client
+  of interfaces in the service package. A provider is responsible for providing
+  the value of the contract, and a consumer receives the value of the contract.
+ 
+  A consumer of an API is relatively distant from the contract and it often
+  plays the role of a consumer in many different service contracts.
+  A consumer of an API can expect backward compatibility.
+   
+  On the contrary, a provider of an API must fully implement a contract that has
+  virtually no backward compatibility, because it is is extremely closely tied
+  to the version of the API it provides. Any change in the version that affects
+  the public API must result in rebuild of the provider’s bundle.
+  Furthermore, a provider usually provides only a single service contact while
+  being a consumer in other service contracts.
+  
+  Therefore the best practice in OSGi is for a provider to include its
+  service API codes and export it. Separating the API from the provider makes
+  no sense since there is a 1:1 relation between provider and API, unlike the
+  consumer that will get backward compatibility from the API.
+  Having the API in the bundle just makes life easier.
+  That said, do not make the mistake to place them in the same project since
+  that would require compiling against a JAR that would also contain the
+  implementation.
+  Compilation should always be done against API only JARs to prevent
+  accidentally becoming dependent on implementation code.
+  
+  Consequently :
+  ****************************************************************************
+  *** Best practices dictate also that the provider should export its API  ***
+  *** As a consequence, pure API projects must not be used in runtime      ***
+  ****************************************************************************
+  
+  This is the reason why the bnd.bnd file of the API bundle (com.acme.prime.eval.api)
+  has a 'compile-only' instruction :
+    Require-Capability: compile-only
+    
+  Be mindful of how to influence the semantic versioning range for the provider(s)
+  and for the consumer(s) of the contract with the use of @ProviderType and
+  @ConsumerType annotations. The role of these annotations is explained in the
+  "Export" paragraph in this section of the tutorial.
+  To retrieve more explanations about the Provider & Consumer Types and about the
+  rationale for setting the compile-only requirement in the MANIFEST of this bundle,
+  consult :
+    "OSGi in action" - chapter 5 - "Delving deeper into modularity"
+    
+  Remind that A bnd project is driven by the bnd.bnd file. This properties file
+  defines the bnd instructions like the bundle version, the build path, which
+  packages should go into the bundle, etc...
+  Bndtools takes these informations and instructs Eclipse to act accordingly to
+  assemble the bundle and synthesize the MANIFEST file.
+  
+  --- ---------------------------------------------------------------------------
+  -- Section 4   --  Provider Project
+  
+  Related bundle project :
+    com.acme.prime.eval.provider
+    
+  NOTE :
+  Extract from the tutorial paragraph "Build Path" :
+  ...
+  Before being linked to the com.acme.prime.eval.api project, Eclipse cannot find
+  the Eval class -> Hold your temptation to add this to the Eclipse Build Path
+  because this will then fail later in the continuous integration where there is
+  no Eclipse. Nope, we must add the dependency to bnd to get fidelity between our
+  user friendly Eclipse world and the software engineering world of continuous
+  integration.
+    
+  *** The dependencies of bnd are defined in the bnd.bnd file.     ***
+ 
+  We can control the build path through the build path editor. Double click on
+  the bnd.bnd file and select the Build tab.
+  ...
+  
+  ------------------------------------------------------------------------------
+  -- Section 5   --  Testing the Provider with (Standard) JUnit
+  
+  NTR
+   
+  ------------------------------------------------------------------------------
+  -- Section 6   --  Running Your Code
+  
+  Related bundle project :
+    com.acme.prime.eval.provider
+    
+  NOTE :
+  About the "Run requirements" paragraph :
+  The exercise runs as planned when i add org.apache.felix.gogo.shell bundle in
+  the 'run requirements' list.
+  
+  PROBLEM :
+  I have also tried to use osgi.enroute.gogo.shell.provider instead but this shell
+  terminates prematurely -> Exception... when debugging i found that the Shell object
+  has no reference (null -> not instantiated).
+  
+  REMARK :
+  when resolving while adding any one of these gogo shell bundle, some
+  optional dependencies remains. I let them unresolved, this is sufficient for
+  org.apache.felix.gogo.shell, but may be not for osgi.enroute.gogo.shell.provider.
+  ...
+  
+  NOTE :
+  About the "Updating" tutorial paragraph :
+  Once the regular-expression of the eval method of EvalImpl class is updated, i.e.
+  once the "*" and the "/" characters searches are added in the regex as additional
+  operators to parse, a problem appears when inputting "*" as the operator.
+  I debugged that the method works well, its regex pattern is good.
+  I also discovered that for inputing the "*" character via the Apache Felix
+  Gogo Shell, we must enter the sequence "\*" instead. Why ?
+  Is there a need to configure Apache Felix Gogo Shell ?
+  
+  TODO :
+  See doc of Apache Felix Gogo Shell
+  ...
+  
+  ------------------------------------------------------------------------------
+  -- Section 7   --  Debugging
+  
+  Related bundle project :
+    com.acme.prime.eval.provider
+    
+  NTR (see comments in the header of this file)
+  
+  ------------------------------------------------------------------------------
+  -- Section 8   --  Dependencies
+
+  WARNING :
+  All is OK until the "Playing" paragraph :
+  I debugged that the Apache-Felix Gogo shell requires that some non-alphanumeric
+  characters, but not all, be escaped. Its is notably the case for "*", "(", ")"
+  For example :
+    - expecting to input : test:eval 12*6
+      we must input      : test:eval 12\*6
+    - expecting to input : test:eval sin(pi)
+      we must input      : test:eval sin\(pi\)
+      ...
+  Note that "+", "-", "\" do not need to be escaped
+  
+  Despite this slight disappointment with the shell, the exercises in this section
+  passe successfully
+  
+  INFO :
+  We could think that there is no more need to maintain com.scireum:parsii
+  bundle in the build-path because we copied and embedded the two packages upon
+  which our provider now depends, i.e. parsii.eval and parsii.tokenizer
+  Apparently, these packages do not require any more external packages than what
+  they can import from the java.*. Notice that the java.* need not to be added to
+  the build-path because they are always available at in the JDK (and at runtime). 
+  But what we have embedded are the binaries of these two packages, not their sources.
+  Unfortunately, Eclipse can't find the classes from these packages at compile time.
+  This is the reason why the bundle com.scireum:parsii needs effectively to be added
+  to the build-path. 
+  
+  TODO :
+  This explanation must be verified !!!   
+  
+  ------------------------------------------------------------------------------
+  -- Section 9   --  Testing in OSGi
+  
+  NTR
+  
+  ------------------------------------------------------------------------------
+  -- Section 10  --  Deploying an Application
+  
+  Related bundle project :
+    com.acme.prime.eval.application
+  
+  Extract from org.osgi.service.component.annotations.Reference javaDoc :
+    ---
+    @org.osgi.service.component.annotations.Reference
+    
+    @Target(value={FIELD, METHOD})
+    @Retention(value=CLASS)
+    Identify the annotated member as a reference of a Service Component.
+    When the annotation is applied to a method, the method is the bind method of
+    the reference. When the annotation is applied to a field, the field will
+    contain the bound service(s) of the reference.
+    This annotation is not processed at runtime by Service Component Runtime.
+    It must be processed by tools and used to add a Component Description to the
+    bundle.
+    ...
+    ---
+    
+  INFO :
+  The code in package com.acme.prime.eval.application registers a service which
+  name is "com.acme.prime.eval". The object offered by this new service is an
+  instance of the com.acme.prime.eval.application.EvalApplication class.
+  The @Component annotation on its class (EvalApplication), makes the
+  Declarative-Service identifies this class as the implementation of the component.
+  This service is registered as a dummy service that now provides the eval:eval
+  command to Gogo shell.
+    
+  Furthermore we can notice that the EvalApplication encapsulates a method
+  annotated by @org.osgi.service.component.annotations.Reference :
+  if applied to a member (a field) of a class, this @Reference annotation can be
+  used to identify this member as a reference of another Service Component.
+  In our case, this annotation is applied to the method setEval(Eval eval) of
+  our class EvalApplication, this makes this one the bind method of the reference.
+  Finally, this makes the bounded other service be referenced by the (Eval) eval
+  field of our class EvalApplication
+
+  TODO : This explanation must be verified  
+  
+  From tutorial paragraph "Defining the application" :
+  At run time, inputting, say
+    eval:eval 10+5
+  with the Gogo shell, will induce a call to method eval of the service named
+  "com.acme.prime.eval" which at its turn will make a call to method eval of
+  the other bounded service named "com.acme.prime.eval.simple", passing to it
+  the string "10+5" as an argument.
+  Indeed, our "com.acme.prime.eval" service having dependency on service 
+  "com.acme.prime.eval.simple", this last is also installed and run by the
+  framework. As a consequence we can still input a Gogo command to it, like
+    test:eval 5/2
+      
+  Remind that the service named "com.acme.prime.eval.simple" is provided by
+  com.acme.prime.eval.provider
+    
+  The OSGi-template we used when first creating this *.application project was
+  supposed to generate the code for a default web-page that would be served by
+  an Apache Jetty web-server. Other related web resources were included, like
+  Google-Angular and Twitter-Bootstrap.
+  Furthermore, the template created in the project the hierarchical configuration
+  and data related to serve this web-page, which it put in the 3 following
+  directories : 
+    configuration\
+    static\
+    web\
+  The template also added to the -includeresource instruction included in the
+  bnd.bnd file, three clauses to make the above mentioned web related resources
+  and directories be included in the generated jar. These clauses are
+    {configuration=configuration}, {static=static}, web=web
+  But as our application doesn't need any web-page to be served, we can suppress
+  these 3 clauses from the -includeresource bnd instruction.
+  This has the effect of removing the above mentioned web-resources and
+  web-directories from the content of the exported executable-jar of our
+  *.application project.  
+  Furthermore, as they become useless, and because we don't expect to re-use
+  them in this application, these 3 directories can also be removed manually
+  from the project structure. What i did.
+  
+  TODO :
+  These suppressions must be validated
+    
+  ------------------------------------------------------------------------------
+  -- Section 11  --  Continuous Integration
+
+
+================================================================================
+  This virtual working-set is assigned to a particular tutorial from the
+  "enRoute OSGi org".
+  The bundle projects grouped in this virtual working-set are those involved in
+  this particular tutorial
+  
+  Working-set name : "Base tutorial"
+
+  Link to the tutorial :
+    http://enroute.osgi.org/tutorial_base/050-start.html
+
+  Bundle projects grouped in this working-set :
+    com.acme.prime.eval.api
+    com.acme.prime.eval.provider
+    com.acme.prime.eval.test
+    com.acme.prime.eval.application
+    
+  Packages contained in com.acme.prime.eval.api :
+    com.acme.prime.eval.api
+  
+  Packages contained in com.acme.prime.eval.provider :
+    com.acme.prime.eval.provider
+
+  Packages contained in com.acme.prime.eval.test :
+    com.acme.prime.eval.test
+    
+  Packages contained in com.acme.prime.eval.application :
+    com.acme.prime.eval.application
+   
+================================================================================
+Useful links :
+
+- OSGi-enRoute tutorials :
+http://enroute.osgi.org/book/150-tutorials.html
+
+- OSGi-enRoute - Repository for a template workspace for Bndtools
+https://github.com/osgi/workspace
+
+- bnd :
+http://bnd.bndtools.org/
+
+- Bndtools repositories :
+http://bndtools.org/repositories.html
+
+- Bndtools installation and stable release :
+http://bndtools.org/installation.html#update-site
+https://dl.bintray.com/bndtools/bndtools/latest
+
+- Syntax rules for XML files :
+https://www.w3schools.com/xml/xml_syntax.asp
+
+- Apache Felix SubProject documentation :
+http://felix.apache.org/documentation/subprojects.html
+
+- Apache Felix Gogo shell :
+http://felix.apache.org/documentation/subprojects/apache-felix-gogo.html
+http://felix.apache.org/documentation/subprojects/apache-felix-framework/apache-felix-framework-usage-documentation.html
+
+- Apache Felix Web Console
+http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html
+
+- Maven - The Central Repository :
+http://search.maven.org/#search%7Cga%7C1%7C
+
+
+================================================================================
+Additional references (books, white-papers, application-notes ...) :
+
+- "OSGi in action" - Hall, Pauls, Mc Culloch, Savage
+ISBN-13: 978-1-933988-91-7
+
+================================================================================
+Suggestions for further development
+
+  ...

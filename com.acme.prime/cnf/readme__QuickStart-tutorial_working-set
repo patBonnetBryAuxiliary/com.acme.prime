@@ -1,0 +1,155 @@
+################################################################################
+  The "Quick-Start tutorial" working-set brings together the different OSGi bundle
+  projects related to the eponymous OSGi-enRoute tutorial
+################################################################################
+  Description :
+  
+  In this quick start we develop a little project that, creates a single page
+  web-application. This 'application' will provide a web user interface based on
+  Google's Angular JS and Twitter’s Bootstrap. We will use the OSGi enRoute
+  built-in template since this is setup to provide exactly that.
+  This tutorial is light on the explanations because it focuses on introducing
+  the overall architecture of enRoute, not the details.
+  
+  - So, this 'application' provides a simple web-page, served by Jetty, located
+    on the local-host at port HTTP:8080
+    This web-page serves as a user-interface. Once launched in the OSGi framework,
+    we can open it with the web-browser, clicking :
+       http://localhost:8080/com.acme.prime.upper
+    if we'are asked for credentials, type :
+      User id: 	admin
+      Password:	admin   
+    
+  - Furthermore, in the 'debug' phase of this tutorial (see OSGi details
+    in section "Creating an application) we will additionally make the
+    OSGi framework running an Apache-Felix-Web-Console to debug the bundles.
+    We can open it with the web-browser, clicking :
+      URL : http://localhost:8080/system/console/xray
+    if we'are asked for credentials, type :
+      User id: 	admin
+      Password:	admin  
+      
+================================================================================
+  Report about the progress of this tutorial :
+  
+  ------------------------------------------------------------------------------
+  -- Section 1   --  Prerequisites
+  
+  NTR [Nothing To Report]
+
+  ------------------------------------------------------------------------------
+  -- Section 2   --  The Workspace
+  
+  NTR
+
+  ------------------------------------------------------------------------------
+  -- Section 3   --  Creating an application
+  
+  Related bundle project at time of first time exercising this section of the
+  tutorial :
+    com.acme.prime.upper.application
+  
+  or
+  
+  Related bundle projects once the "Exercise services" section of this tutorial
+  has been applied :
+    com.acme.prime.upper.application
+    com.acme.prime.upper.api
+    com.acme.prime.upper.provider
+ 
+  NOTE :
+  Use the launchers of com.acme.prime.upper.application bundle to run the
+  application
+    
+  The launcher to run or debug classically the application is :
+    com.acme.prime.upper.bndrun
+    (Run->Debug OSGi)
+  
+  The launcher to debug the application using the Apache-Felix Web-Console is :
+    debug.bndrun
+    (Run->Debug OSGi)
+
+  *** WARNING :                                                                ***
+  *** These two launchers must not be run simultaneously !!!                   ***
+  *** i.e. if com.acme.prime.upper.bndrun is already running, its OSGi         ***
+  *** framework  must be killed before an attempt to run debug.bndrun is made. ***
+  *** The reciprocal is true.                                                  ***
+   
+  THIS EXPLANATION MUST BE VERIFIED :
+  The reason is that it would seem that each session created for the the Jetty server
+  of our application Web-Page will connect to the same local-host port.
+  Remind that if we would attempt to re-launch our web application, having a previous
+  one running (in its own VM), the new Jetty server would run in a new VM which
+  implies that the previously Jetty session would still be active.
+  Finally, such an attempt would result in Jetty conflicting to connect.
+  The same problem seems to happen with an attempt to relaunch the
+  Apache-Felix Web-Console while a previous application runs.
+  
+  ------------------------------------------------------------------------------
+  -- Section 4   --  Exercise services
+  
+  Related bundle project at time of first time exercising this section of the
+  tutorial :
+    com.acme.prime.upper.application
+    com.acme.prime.upper.api
+    com.acme.prime.upper.provider
+    
+  NTR
+    
+================================================================================
+  This virtual working-set is assigned to a particular tutorial from the
+  "enRoute OSGi org".
+  The bundle projects grouped in this virtual working-set are those involved in
+  this particular tutorial
+  
+  Working-set name : "Quick-Start tutorial"
+
+  Link to the tutorial :
+    http://enroute.osgi.org/qs/050-start.html
+
+  Bundle projects grouped in this working-set :
+    com.acme.prime.api
+    com.acme.prime.upper.provider
+    com.acme.prime.upper.application
+    
+  Packages contained in com.acme.prime.api :
+    com.acme.prime.api
+  
+  Packages contained in com.acme.prime.upper.provider :
+    com.acme.prime.upper.provider
+    
+  Packages contained in com.acme.prime.upper.application :
+    com.acme.prime.upper.application
+   
+================================================================================
+Useful links :
+
+- OSGi-enRoute tutorials :
+http://enroute.osgi.org/book/150-tutorials.html
+
+- OSGi-enRoute - Repository for a template workspace for Bndtools
+https://github.com/osgi/workspace
+
+- bnd :
+http://bnd.bndtools.org/
+
+- Bndtools repositories :
+http://bndtools.org/repositories.html
+
+- Bndtools installation and stable release :
+http://bndtools.org/installation.html#update-site
+https://dl.bintray.com/bndtools/bndtools/latest
+
+- Syntax rules for XML files :
+https://www.w3schools.com/xml/xml_syntax.asp
+
+================================================================================
+Additional references (books, white-papers, application-notes ...) :
+
+- "OSGi in action" - Hall, Pauls, Mc Culloch, Savage
+ISBN-13: 978-1-933988-91-7
+
+================================================================================
+Suggestions for further development
+
+  ...

@@ -1,0 +1,71 @@
+  Reminder about OSGi development :
+  
+  Modular applications are made of an aggregate of interacting bundles, 
+  where each bundle satisfy the OSGi specifications. An OSGi bundle is a jar
+  that embeds its class-files and resources in a structured way, as well as
+  a MANIFEST file which must complies with the OSGi specifications,
+  i.e. containing the required OSGi meta-data.
+  The process of developing (assembling) an OSGi bundle is driven by the 
+  MANIFEST file.
+  
+  Reminder about developing with Bndtools :
+
+  The underlying maker tool for an OSGi bundle is bnd, a command-line tool.
+  Bndtools, an Eclipse-IDE plug-in, is a powerful and productive way to
+  develop with OSGi, based on bnd. Bndtools automates the overall processes
+  of building the bundle, i.e. assembling the jar and synthesizing the MANIFEST
+  file by managing calls to bnd, passing to it the required command arguments.
+  - Remind that for bnd, a command is given as an argument to the call to bnd,
+    and that a list of bnd commands can be passed using a properties file, where
+    each property triggers a specific bnd command.
+  - Remind also that to comply with OSGi specifications, the MANIFEST file must
+    contain some OSGi specific meta-data.
+  In addition to the general meta-data a MANIFEST file of a java jar bundle must
+  possess, the meta-data specific to OSGi are obviously also managed by bnd,
+  which means that additional properties file(s) are required for them.
+  
+  Under Bndtools, a bnd project is driven by the bnd.bnd file or by a
+  hierarchical tree of *.bnd files whose parent is bnd.bnd.
+  The purpose of bnd.bnd (and optionally its hierarchy) is precisely to control
+  the OSGi aspects of the bundle in development, e.g. the bundle version, which
+  packages should go into the bundle, what is exported, imported, capabilities,
+  and other requirements ...
+  Furthermore, bnd.bnd contains also some properties not related to the targeted
+  bundle content but to make bnd configuring other aspects of the project like
+  the build path, the test path, the run configuration, etc...  
+
+  Using the BndTools editor, we can manipulate the *.bnd file through a set
+  specialized HMI forms tabs. The overall result can be consulted in the
+  "Source" tab of this editor. It is also possible to edit directly the
+  *.bnd file in this "Source" tab.
+  
+  Remind that, unlike developing with PDE (Plugin-Development-Environment), the
+  default build-path of a bnd project is set to the strict minimum (the JRE
+  System Library). Consequently, any other bundles to which the current bnd
+  project need to be linked must be explicitly added to the project build path
+  for compilation.
+  
+  Another important point :
+  Pay attention to the false-friends with the bnd project editor.
+  In this exercise (com.acme.prime.eval.provider), when dragging the
+  API package (com.acme.prime.eval.api) from the 'calculated imports' tab to the
+  'Export packages' tab, then saving, com.acme.prime.eval.api disappears
+  from the 'calculated imports' tab, this doesn't mean that it will no more
+  be imported.
+  See the MANIFEST of the generated bundle (com.acme.prime.eval.provider.jar)
+  and check that the API package (com.acme.prime.eval.api) is either exported and
+  imported, which indicates that a copy of com.acme.prime.eval.api package is now
+  embedded in the com.acme.prime.eval.provider bundle, this also means that this
+  embedded API package is exported under the precise semantic-version of the
+  original. The 'Import-Package' statement also implies that once our provider
+  bundle will be active, the running OSGi framework may link it to another 
+  (and obviously separate) installed bundle exporting the API package (in our
+  exercise it can be the com.acme.prime.eval.api bundle).
+  To occur, this situation implies that the running OSGi framework had resolved
+  that the semantic-version number of the com.acme.prime.eval.api API package
+  exported by the separate bundle is compatible with the version-range specified
+  by the 'version' attribute of the related 'Import-Package' statement in our
+  provider bundle.
+  This implies also that, in this situation, the provider bundle exports the
+  API package it imports.
+  See OSGi in action...
