@@ -252,7 +252,7 @@
   Finally, this makes the bounded other service be referenced by the (Eval) eval
   field of our class EvalApplication
 
-  TODO : This explanation must be verified  
+  TODO : The above explanation must be verified  
   
   From tutorial paragraph "Defining the application" :
   At run time, inputting, say
@@ -297,6 +297,14 @@
     
   ------------------------------------------------------------------------------
   -- Section 11  --  Continuous Integration
+  
+  INFO : 
+  Gradle is a general-purpose build automation tool. It extends the usage patterns
+  established by its forerunners Ant and Maven and allows builds that are expressive,
+  maintainable, and easy to understand. Using a flexible Groovy-based DSL, Gradle
+  provides declarative and extendible language elements that let you model your
+  project's needs the way you want.
+  
 
 
 ================================================================================
@@ -363,12 +371,30 @@ http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html
 - Maven - The Central Repository :
 http://search.maven.org/#search%7Cga%7C1%7C
 
+- Gradle (Build Automation Tool :
+https://gradle.org/
+
+- GitHub :
+https://github.com/
+
+- Travis CI (Continuous Integration) :
+https://travis-ci.org/
+https://docs.travis-ci.com/
 
 ================================================================================
 Additional references (books, white-papers, application-notes ...) :
 
-- "OSGi in action" - Hall, Pauls, Mc Culloch, Savage
-ISBN-13: 978-1-933988-91-7
+- "Regular Expressions" - 3rd edition - Jeffrey E.F. Friedl
+ISBN : 978-0-596-52812-6
+
+- "OSGi in Action" - Hall, Pauls, Mc Culloch, Savage
+ISBN : 978-1-933988-91-7
+
+- "Pro Git" - second edition - Scott Chacon, Ben Straub
+ISBN : 978-1-4342-0077-3
+
+- "Gradle in Action" - second edition - Benjamin Muschko
+ISBN : 978-1-617291-30-2
 
 ================================================================================
 Suggestions for further development
