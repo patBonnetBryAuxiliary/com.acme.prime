@@ -305,7 +305,29 @@
   provides declarative and extendible language elements that let you model your
   project's needs the way you want.
   
-
+  WARNING :
+  I have registered an account at github, given my username, my password, and
+  my email address.
+  For this exercise i created a github repository that i named com.acme.prime
+  OK, but on my local disk, my com.acme.prime workspace was located under the
+  following dir :
+    ... \git\com.acme.prime\
+  and the git\ dir is already the root of an old repository, where we can find
+  some old demo projects :  
+    ... \git\com.vogella.git.first\
+    ... \git\gitmultiexample\
+  I checked that the root .git directory is under this ... \git\ directory,
+  making this last the repository to be considered for the creation of the
+  github repo.
+  
+  So, the name i chosen for my github repo is not coherent with that hierarchy.
+  In addition, the com.acme.prime workspace not being at the root, the Travis
+  Continuous-Integration server will fail when trying to automatically build
+  the projects because it cannot see an expected *.yml file at the root.
+  
+  TODO : This must be corrected !
+  
+  Despite this limitation, the 'clone' and 'push' of the repo works well.   
 
 ================================================================================
   This virtual working-set is assigned to a particular tutorial from the
