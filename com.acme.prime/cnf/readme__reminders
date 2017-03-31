@@ -1,5 +1,5 @@
   Reminder about OSGi development :
-  
+  ---------------------------------
   Modular applications are made of an aggregate of interacting bundles, 
   where each bundle satisfy the OSGi specifications. An OSGi bundle is a jar
   that embeds its class-files and resources in a structured way, as well as
